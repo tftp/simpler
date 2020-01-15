@@ -9,15 +9,17 @@ module Simpler
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
+      @headers = {}
     end
 
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
-      set_default_headers
       send(action)
       status 201
+      @headers['Content-Type'] = 'text/plain'
+      set_headers
       write_response
 
       @response.finish
@@ -33,8 +35,10 @@ module Simpler
       self.class.name.match('(?<name>.+)Controller')[:name].downcase
     end
 
-    def set_default_headers
-      @response['Content-Type'] = 'text/html'
+    def set_headers
+      @headers['Content-Type'] ||= 'text/html'
+
+      @headers.each {|key, value| @response[key] = value}
     end
 
     def write_response
