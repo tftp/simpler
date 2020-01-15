@@ -11,4 +11,9 @@ class TestsController < Simpler::Controller
 
   end
 
+  def show
+    render file: 'tests/show'
+
+  end
+
 end

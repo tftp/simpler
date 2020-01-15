@@ -6,13 +6,14 @@ module Simpler
 
       def initialize(method, path, controller, action)
         @method = method
-        @path = path
+        @path = path.split('/')
         @controller = controller
         @action = action
       end
 
       def match?(method, path)
-        @method == method && path.match(@path)
+        path = path.split('/')
+        @method == method && path[1] == @path[1] && !path[2].nil?^@path[2].nil?
       end
 
     end
