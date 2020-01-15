@@ -28,6 +28,7 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
+      return Controller.new(env).make_response_404 unless route
       controller = route.controller.new(env)
       action = route.action
 

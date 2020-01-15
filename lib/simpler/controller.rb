@@ -12,12 +12,19 @@ module Simpler
       @headers = {}
     end
 
+    def make_response_404
+      status 404
+      set_headers
+      @response.write('Not found')
+
+      @response.finish
+    end
+
     def make_response(action)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
       send(action)
-      status 201
       @headers['Content-Type'] = 'text/plain'
       set_headers
       write_response
