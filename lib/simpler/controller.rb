@@ -17,12 +17,17 @@ module Simpler
 
       set_default_headers
       send(action)
+      status 201
       write_response
 
       @response.finish
     end
 
     private
+
+    def status(status)
+      @response.status = status
+    end
 
     def extract_name
       self.class.name.match('(?<name>.+)Controller')[:name].downcase
