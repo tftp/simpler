@@ -16,7 +16,7 @@ module Simpler
       status 404
       set_headers
       @response.write('Not found')
-
+      
       @response.finish
     end
 
