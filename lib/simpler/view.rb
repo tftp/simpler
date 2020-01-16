@@ -10,7 +10,7 @@ module Simpler
     end
 
     def render(binding)
-      template = File.read(template_path)
+      template = template_select
 
       ERB.new(template).result(binding)
     end
@@ -30,9 +30,28 @@ module Simpler
     end
 
     def template_path
-      path = template || [controller.name, action].join('/')
+      path = template_body || [controller.name, action].join('/')
 
       Simpler.root.join(VIEW_BASE_PATH, "#{path}.html.erb")
+    end
+
+    def template_type
+      template.first[0] unless template.nil?
+    end
+
+    def template_body
+      template.first[1] unless template.nil?
+    end
+
+    def template_select
+      case template_type
+      when :plain
+        return template_body
+      when :file
+        return File.read(template_path)
+      else
+        return File.read(template_path)
+      end
     end
 
   end

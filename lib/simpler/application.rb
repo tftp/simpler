@@ -28,7 +28,9 @@ module Simpler
 
     def call(env)
       route = @router.route_for(env)
-      controller = route.controller.new(env)
+      return Controller.new(env, nil).make_response_404 unless route
+      route.add_params(env)
+      controller = route.controller.new(env,route.params)
       action = route.action
 
       make_response(controller, action)
