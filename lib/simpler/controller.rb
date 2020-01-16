@@ -3,20 +3,21 @@ require_relative 'view'
 module Simpler
   class Controller
 
-    attr_reader :name, :request, :response
+    attr_reader :name, :request, :response, :params
 
-    def initialize(env)
+    def initialize(env, params)
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
       @headers = {}
+      @params = params || {}
     end
 
     def make_response_404
       status 404
       set_headers
       @response.write('Not found')
-      
+
       @response.finish
     end
 
@@ -25,7 +26,6 @@ module Simpler
       @request.env['simpler.action'] = action
 
       send(action)
-      @headers['Content-Type'] = 'text/plain'
       set_headers
       write_response
 
@@ -44,7 +44,7 @@ module Simpler
 
     def set_headers
       @headers['Content-Type'] ||= 'text/html'
-
+      
       @headers.each {|key, value| @response[key] = value}
     end
 
@@ -56,10 +56,6 @@ module Simpler
 
     def render_body
       View.new(@request.env).render(binding)
-    end
-
-    def params
-      @request.params
     end
 
     def render(template)

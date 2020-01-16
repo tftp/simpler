@@ -50,7 +50,7 @@ module Simpler
       when :file
         return File.read(template_path)
       else
-        return 'No template'
+        return File.read(template_path)
       end
     end
 
